@@ -11,10 +11,12 @@ const MOCK_USERS = [
 ]
 
 const ROLE_BADGE_STYLE = {
-  super_admin: { bg: 'rgba(123,45,139,0.1)',  border: 'rgba(123,45,139,0.25)', color: '#7B2D8B' },
-  operations:  { bg: 'rgba(245,166,35,0.1)',  border: 'rgba(245,166,35,0.25)', color: '#B8760A' },
-  finance:     { bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.2)',  color: '#2563EB' },
-  support:     { bg: 'rgba(107,114,128,0.08)',border: 'rgba(107,114,128,0.2)', color: '#6B7280' },
+  super_admin:  { bg: 'rgba(123,45,139,0.1)',  border: 'rgba(123,45,139,0.25)', color: '#7B2D8B' },
+  operations:   { bg: 'rgba(245,166,35,0.1)',  border: 'rgba(245,166,35,0.25)', color: '#B8760A' },
+  finance:      { bg: 'rgba(59,130,246,0.08)', border: 'rgba(59,130,246,0.2)',  color: '#2563EB' },
+  support:      { bg: 'rgba(107,114,128,0.08)',border: 'rgba(107,114,128,0.2)', color: '#6B7280' },
+  sales:        { bg: 'rgba(236,72,153,0.08)', border: 'rgba(236,72,153,0.2)',  color: '#DB2777' },
+  admin_cabang: { bg: 'rgba(139,92,246,0.08)', border: 'rgba(139,92,246,0.2)',  color: '#7C3AED' },
 }
 
 export default function ManajemenUser() {

@@ -10,8 +10,8 @@ const AuthContext = createContext(null)
 // RBAC: Tab visibility per role
 // ─────────────────────────────────────────────
 export const TAB_PERMISSIONS = {
-  katalog:  ['super_admin', 'operations'],
-  booking:  ['super_admin', 'operations', 'support'],
+  katalog:  ['super_admin', 'operations', 'sales', 'admin_cabang'],
+  booking:  ['super_admin', 'operations', 'support', 'sales', 'admin_cabang'],
   b2b:      ['super_admin', 'finance'],
   user:     ['super_admin'],
 }
@@ -21,6 +21,8 @@ export const ROLE_LABELS = {
   operations:  'Product Operations',
   finance:     'Finance Admin',
   support:     'Customer Support',
+  sales:       'Sales Staff',
+  admin_cabang: 'Admin Cabang',
 }
 
 // ─────────────────────────────────────────────

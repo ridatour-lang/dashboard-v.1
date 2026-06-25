@@ -45,7 +45,7 @@ CREATE TABLE IF NOT EXISTS tb_users (
     full_name       VARCHAR(255),
     avatar_url      TEXT,
     role            VARCHAR(50) NOT NULL DEFAULT 'support'
-                    CHECK (role IN ('super_admin', 'operations', 'finance', 'support')),
+                    CHECK (role IN ('super_admin', 'operations', 'finance', 'support', 'sales', 'admin_cabang')),
     provider        VARCHAR(50) NOT NULL DEFAULT 'google',
     is_active       BOOLEAN NOT NULL DEFAULT TRUE,
     last_login_at   TIMESTAMPTZ,
@@ -389,19 +389,19 @@ CREATE POLICY "ops_read_bookings" ON tb_bookings
         EXISTS (
             SELECT 1 FROM tb_users u
             WHERE u.supabase_uid = auth.uid()
-            AND u.role IN ('super_admin', 'operations', 'support')
+            AND u.role IN ('super_admin', 'operations', 'support', 'sales', 'admin_cabang')
             AND u.is_active = TRUE
         )
     );
 
--- super_admin & operations bisa write (update status, notes)
+-- super_admin, operations, sales, & admin_cabang bisa write (update status, notes)
 CREATE POLICY "ops_write_bookings" ON tb_bookings
     FOR ALL TO authenticated
     USING (
         EXISTS (
             SELECT 1 FROM tb_users u
             WHERE u.supabase_uid = auth.uid()
-            AND u.role IN ('super_admin', 'operations')
+            AND u.role IN ('super_admin', 'operations', 'sales', 'admin_cabang')
             AND u.is_active = TRUE
         )
     );
