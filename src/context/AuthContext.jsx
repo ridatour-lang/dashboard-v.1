@@ -66,7 +66,23 @@ export function AuthProvider({ children }) {
     const meta = await fetchUserMeta(sess.user.id)
 
     if (!meta) {
-      // Email belum ada di tb_users sama sekali → tampilkan form lengkapi profil
+      // Email belum ada di tb_users sama sekali
+      // Cek apakah ini bagian dari alur OAuth yang baru saja dimulai
+      const oauthInProgress = sessionStorage.getItem('oauth_in_progress') === 'true'
+
+      if (!oauthInProgress) {
+        // Jika tidak ada flag proses login aktif (misal dari sesi tab baru/lama), otomatis keluarkan user dari sesi
+        // agar tidak langsung masuk ke halaman Lengkapi Profil tanpa melewati Login awal
+        await supabase.auth.signOut()
+        setSession(null)
+        setUserMeta(null)
+        setPendingUser(null)
+        setPendingApproval(false)
+        setLoading(false)
+        return
+      }
+
+      // Tampilkan form lengkapi profil (flag dihapus setelah registrasi selesai/completeRegistration)
       setPendingUser({
         uid:        sess.user.id,
         email:      sess.user.email,
@@ -108,6 +124,7 @@ export function AuthProvider({ children }) {
   // ── Actions ──────────────────────────────────
   const signInWithGoogle = async () => {
     setError(null)
+    sessionStorage.setItem('oauth_in_progress', 'true') // Set flag sebelum navigasi ke Google
     const { error: signInError } = await supabase.auth.signInWithOAuth({
       provider: 'google',
       options: {
@@ -118,10 +135,14 @@ export function AuthProvider({ children }) {
         },
       },
     })
-    if (signInError) setError(signInError.message)
+    if (signInError) {
+      sessionStorage.removeItem('oauth_in_progress')
+      setError(signInError.message)
+    }
   }
 
   const signOut = async () => {
+    sessionStorage.removeItem('oauth_in_progress')
     await supabase.auth.signOut()
     setSession(null)
     setUserMeta(null)
@@ -148,6 +169,7 @@ export function AuthProvider({ children }) {
       return { success: false, error: 'Gagal mendaftar. Coba lagi atau hubungi Admin.' }
     }
 
+    sessionStorage.removeItem('oauth_in_progress') // Hapus flag setelah sukses mendaftar
     setPendingUser(null)
     setPendingApproval(true)
     return { success: true }
