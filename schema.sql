@@ -96,30 +96,25 @@ CREATE TRIGGER update_tb_users_modtime
     FOR EACH ROW EXECUTE FUNCTION update_modified_column();
 
 -- ─────────────────────────────────────────────────────────────
--- TRIGGER: Auto-provisioning user baru dari Google SSO
+-- TRIGGER: Update last_login_at saja untuk user yang sudah terdaftar
+-- (Akun baru TIDAK auto-dibuat di sini — dibuat lewat completeRegistration() di frontend
+--  agar bisa melewati flow approval: isi nama + WA → tunggu aktivasi super_admin)
 -- ─────────────────────────────────────────────────────────────
-CREATE OR REPLACE FUNCTION handle_new_sso_user()
+CREATE OR REPLACE FUNCTION handle_sso_login()
 RETURNS TRIGGER AS $$
 BEGIN
-    INSERT INTO public.tb_users (supabase_uid, email, full_name, avatar_url, role)
-    VALUES (
-        NEW.id,
-        NEW.email,
-        NEW.raw_user_meta_data->>'full_name',
-        NEW.raw_user_meta_data->>'avatar_url',
-        'support'
-    )
-    ON CONFLICT (email) DO UPDATE
-        SET last_login_at = NOW(),
-            avatar_url    = EXCLUDED.avatar_url,
-            full_name     = COALESCE(EXCLUDED.full_name, tb_users.full_name);
+    -- Hanya update last_login_at jika user sudah ada di tb_users
+    UPDATE public.tb_users
+       SET last_login_at = NOW(),
+           avatar_url    = COALESCE(NEW.raw_user_meta_data->>'avatar_url', avatar_url)
+     WHERE supabase_uid = NEW.id;
     RETURN NEW;
 END;
 $$ LANGUAGE plpgsql SECURITY DEFINER;
 
-CREATE TRIGGER on_auth_user_created
+CREATE TRIGGER on_auth_user_login
     AFTER INSERT ON auth.users
-    FOR EACH ROW EXECUTE FUNCTION handle_new_sso_user();
+    FOR EACH ROW EXECUTE FUNCTION handle_sso_login();
 
 -- ─────────────────────────────────────────────────────────────
 -- ROW LEVEL SECURITY (RLS)
@@ -149,6 +144,11 @@ CREATE POLICY "self_read_user" ON tb_users
     FOR SELECT TO authenticated
     USING (supabase_uid = auth.uid());
 
+-- Users: user bisa INSERT data diri sendiri (untuk completeRegistration)
+CREATE POLICY "self_insert_user" ON tb_users
+    FOR INSERT TO authenticated
+    WITH CHECK (supabase_uid = auth.uid());
+
 -- Users: super_admin bisa baca semua user
 CREATE POLICY "admin_read_all_users" ON tb_users
     FOR SELECT TO authenticated
@@ -161,7 +161,7 @@ CREATE POLICY "admin_read_all_users" ON tb_users
         )
     );
 
--- Users: super_admin bisa update role user lain
+-- Users: super_admin bisa update role & is_active user lain
 CREATE POLICY "admin_update_users" ON tb_users
     FOR UPDATE TO authenticated
     USING (
