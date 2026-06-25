@@ -24,14 +24,16 @@ function GoogleIcon({ size = 20 }) {
 // ── RiDATOUR Logo Mark ───────────────────────
 function RiDATOURLogo({ size = 64 }) {
   return (
-    <svg width={size} height={size} viewBox="0 0 80 80" xmlns="http://www.w3.org/2000/svg">
-      <circle cx="40" cy="40" r="40" fill="#7B2D8B"/>
-      <g transform="translate(40,40) rotate(-30)" fill="white">
-        <path d="M0,-14 L4,-2 L16,2 L4,4 L3,12 L0,9 L-3,12 L-4,4 L-16,2 L-4,-2 Z" opacity="0.9"/>
-      </g>
-      <text x="40" y="62" textAnchor="middle" fontFamily="Inter,sans-serif" fontWeight="800"
-        fontSize="11" fill="#F5A623" letterSpacing="2">RiDA</text>
-    </svg>
+    <img
+      src="/logo.png"
+      alt="RiDATOUR Logo"
+      className="rounded-full object-cover mx-auto"
+      style={{
+        width: size,
+        height: size,
+        boxShadow: '0 0 20px rgba(123,45,139,0.3)',
+      }}
+    />
   )
 }
 

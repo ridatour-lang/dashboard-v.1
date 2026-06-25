@@ -17,21 +17,16 @@ function SidebarLogo({ collapsed }) {
   return (
     <div className={`flex items-center mb-8 ${collapsed ? 'justify-center' : 'space-x-3'}`}>
       {/* Circle logo */}
-      <div
-        className="flex-shrink-0 flex items-center justify-center rounded-full font-extrabold text-white"
+      <img
+        src="/logo.png"
+        alt="RiDATOUR Logo"
+        className="flex-shrink-0 rounded-full object-cover"
         style={{
-          width: 38, height: 38,
-          background: 'linear-gradient(135deg, #7B2D8B 0%, #9B3AAE 100%)',
-          boxShadow: '0 0 14px rgba(123,45,139,0.5)',
-          fontSize: 13,
-          letterSpacing: 1,
+          width: 38,
+          height: 38,
+          boxShadow: '0 0 14px rgba(123,45,139,0.3)',
         }}
-      >
-        {/* Miniature plane in gold */}
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="none">
-          <path d="M21 3L3 10.5l6.75 2.25L12 21l2.25-5.25L21 3z" fill="#F5A623" opacity="0.95"/>
-        </svg>
-      </div>
+      />
       {!collapsed && (
         <div className="overflow-hidden">
           <p className="font-extrabold text-sm leading-tight text-white tracking-wide">RiDATOUR</p>
