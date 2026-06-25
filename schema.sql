@@ -117,6 +117,22 @@ CREATE TRIGGER on_auth_user_login
     FOR EACH ROW EXECUTE FUNCTION handle_sso_login();
 
 -- ─────────────────────────────────────────────────────────────
+-- HELPER: Cek role super_admin secara aman tanpa memicu RLS loop
+-- (SECURITY DEFINER berjalan dengan hak akses admin, membypass RLS)
+-- ─────────────────────────────────────────────────────────────
+CREATE OR REPLACE FUNCTION public.is_super_admin(user_uid uuid)
+RETURNS boolean AS $$
+BEGIN
+    RETURN EXISTS (
+        SELECT 1 FROM public.tb_users
+        WHERE supabase_uid = user_uid
+          AND role = 'super_admin'
+          AND is_active = true
+    );
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+-- ─────────────────────────────────────────────────────────────
 -- ROW LEVEL SECURITY (RLS)
 -- ─────────────────────────────────────────────────────────────
 ALTER TABLE tb_products    ENABLE ROW LEVEL SECURITY;
@@ -149,29 +165,15 @@ CREATE POLICY "self_insert_user" ON tb_users
     FOR INSERT TO authenticated
     WITH CHECK (supabase_uid = auth.uid());
 
--- Users: super_admin bisa baca semua user
+-- Users: super_admin bisa baca semua user (menggunakan helper is_super_admin)
 CREATE POLICY "admin_read_all_users" ON tb_users
     FOR SELECT TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM tb_users u2
-            WHERE u2.supabase_uid = auth.uid()
-            AND u2.role = 'super_admin'
-            AND u2.is_active = TRUE
-        )
-    );
+    USING (public.is_super_admin(auth.uid()));
 
--- Users: super_admin bisa update role & is_active user lain
+-- Users: super_admin bisa update role & is_active user lain (menggunakan helper is_super_admin)
 CREATE POLICY "admin_update_users" ON tb_users
     FOR UPDATE TO authenticated
-    USING (
-        EXISTS (
-            SELECT 1 FROM tb_users u2
-            WHERE u2.supabase_uid = auth.uid()
-            AND u2.role = 'super_admin'
-            AND u2.is_active = TRUE
-        )
-    );
+    USING (public.is_super_admin(auth.uid()));
 
 -- Audit logs: hanya super_admin yang bisa baca
 CREATE POLICY "admin_read_audit_logs" ON tb_audit_logs
