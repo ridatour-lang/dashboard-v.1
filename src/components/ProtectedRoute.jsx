@@ -3,7 +3,7 @@ import { useAuth } from '../context/AuthContext'
 import LoginPage from './LoginPage'
 
 export default function ProtectedRoute({ children }) {
-  const { session, loading } = useAuth()
+  const { session, loading, pendingUser, pendingApproval } = useAuth()
 
   if (loading) {
     return (
@@ -40,6 +40,8 @@ export default function ProtectedRoute({ children }) {
     )
   }
 
-  if (!session) return <LoginPage />
+  if (!session || pendingUser || pendingApproval) {
+    return <LoginPage />
+  }
   return children
 }
