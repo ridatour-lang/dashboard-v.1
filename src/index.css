@@ -1,0 +1,173 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import "tailwindcss";
+
+@theme {
+  --font-sans: 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono: 'JetBrains Mono', 'Fira Code', monospace;
+
+  /* ── RiDATOUR Brand Palette ─────────────────────────── */
+  --color-brand-primary:        #7B2D8B;   /* Eggplant purple — logo utama      */
+  --color-brand-primary-hover:  #651F74;   /* Hover — lebih gelap                */
+  --color-brand-primary-deep:   #4A1259;   /* Sangat gelap — sidebar active text */
+  --color-brand-gold:           #F5A623;   /* Gold accent — "Treat you like family" */
+  --color-brand-gold-hover:     #D9901B;   /* Gold hover                         */
+
+  /* ── App Shell ──────────────────────────────────────── */
+  --color-brand-bg:             #F7F4FC;   /* Latar sangat terang — lavender tipis */
+  --color-brand-text:           #1E0B35;   /* Teks utama — eggplant sangat gelap  */
+  --color-brand-card:           #FFFFFF;
+  --color-brand-border:         #EAE3F5;   /* Border — lavender tipis              */
+  --color-brand-muted:          #9B8DB0;   /* Teks sekunder — medium purple-grey   */
+
+  /* ── Sidebar ─────────────────────────────────────────── */
+  --color-sidebar-bg:           #1A0B2E;   /* Dark eggplant                       */
+  --color-sidebar-border:       #2D1550;   /* Border sidebar                      */
+  --color-sidebar-hover:        #261040;   /* Hover state item                    */
+  --color-sidebar-text:         #C9B8E0;   /* Teks sidebar — lavender medium       */
+  --color-sidebar-text-muted:   #6B5880;   /* Teks muted sidebar                  */
+}
+
+/* ─────────────────────────────────────────────
+   Base
+───────────────────────────────────────────── */
+*, *::before, *::after {
+  box-sizing: border-box;
+}
+
+body {
+  font-family: var(--font-sans);
+  background-color: var(--color-brand-bg);
+  color: var(--color-brand-text);
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* ─────────────────────────────────────────────
+   Scrollbar — eggplant tint
+───────────────────────────────────────────── */
+::-webkit-scrollbar        { width: 6px; height: 6px; }
+::-webkit-scrollbar-track  { background: #EDE7F6; }
+::-webkit-scrollbar-thumb  { background: #C4B0D8; border-radius: 4px; }
+::-webkit-scrollbar-thumb:hover { background: #A891C0; }
+
+/* ─────────────────────────────────────────────
+   Dialog / Modal
+───────────────────────────────────────────── */
+dialog::backdrop {
+  background-color: rgba(26, 11, 46, 0.6);
+  backdrop-filter: blur(6px);
+  -webkit-backdrop-filter: blur(6px);
+}
+
+dialog {
+  animation: dialog-in 0.2s ease;
+}
+
+@keyframes dialog-in {
+  from { opacity: 0; transform: translateY(-8px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0)   scale(1);    }
+}
+
+/* ─────────────────────────────────────────────
+   Auth / Login Page — Dark Eggplant
+───────────────────────────────────────────── */
+.login-bg {
+  background:
+    radial-gradient(ellipse at 20% 50%, rgba(123, 45, 139, 0.18) 0%, transparent 60%),
+    radial-gradient(ellipse at 80% 20%, rgba(245, 166, 35, 0.08)  0%, transparent 50%),
+    radial-gradient(ellipse at 50% 90%, rgba(123, 45, 139, 0.12) 0%, transparent 55%),
+    #0F0718;
+}
+
+.google-btn {
+  transition: all 0.2s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.google-btn::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: rgba(255,255,255,0);
+  transition: background 0.2s ease;
+}
+
+.google-btn:hover::after {
+  background: rgba(255,255,255,0.05);
+}
+
+/* ─────────────────────────────────────────────
+   Login Card — glassmorphism eggplant
+───────────────────────────────────────────── */
+.login-card {
+  background: rgba(123, 45, 139, 0.08);
+  border: 1px solid rgba(245, 166, 35, 0.12);
+  box-shadow:
+    0 24px 64px rgba(0,0,0,0.5),
+    0 0 0 1px rgba(123, 45, 139, 0.1) inset;
+}
+
+/* ─────────────────────────────────────────────
+   Sidebar Animations
+───────────────────────────────────────────── */
+.sidebar-label {
+  overflow: hidden;
+  white-space: nowrap;
+  transition: opacity 0.2s ease, max-width 0.3s ease;
+}
+
+.sidebar-label.collapsed {
+  opacity: 0;
+  max-width: 0;
+}
+
+.sidebar-label.expanded {
+  opacity: 1;
+  max-width: 200px;
+}
+
+/* ─────────────────────────────────────────────
+   Pulse dot
+───────────────────────────────────────────── */
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; }
+  50%       { opacity: 0.4; }
+}
+
+.pulse-dot {
+  animation: pulse-dot 1.8s ease-in-out infinite;
+}
+
+/* ─────────────────────────────────────────────
+   Table row hover
+───────────────────────────────────────────── */
+.table-row-hover {
+  transition: background-color 0.15s ease;
+}
+
+.table-row-hover:hover {
+  background-color: rgba(123, 45, 139, 0.028);
+}
+
+/* ─────────────────────────────────────────────
+   Primary button ripple
+───────────────────────────────────────────── */
+.btn-primary {
+  background: #7B2D8B;
+  color: #FFFFFF;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+}
+
+.btn-primary:hover {
+  background: #651F74;
+  box-shadow: 0 4px 16px rgba(123, 45, 139, 0.35);
+}
+
+/* ─────────────────────────────────────────────
+   Gold accent glow
+───────────────────────────────────────────── */
+.gold-glow {
+  box-shadow: 0 0 20px rgba(245, 166, 35, 0.25);
+}
