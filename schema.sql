@@ -44,6 +44,7 @@ CREATE TABLE IF NOT EXISTS tb_users (
     email           VARCHAR(255) UNIQUE NOT NULL,
     full_name       VARCHAR(255),
     avatar_url      TEXT,
+    phone           VARCHAR(20),                        -- Nomor WA staf (diisi saat pendaftaran)
     role            VARCHAR(50) NOT NULL DEFAULT 'support'
                     CHECK (role IN ('super_admin', 'operations', 'finance', 'support', 'sales', 'admin_cabang')),
     provider        VARCHAR(50) NOT NULL DEFAULT 'google',
