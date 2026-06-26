@@ -30,8 +30,8 @@ function SidebarLogo({ collapsed }) {
       {!collapsed && (
         <div className="overflow-hidden">
           <p className="font-extrabold text-sm leading-tight text-white tracking-wide">RiDATOUR</p>
-          <p className="text-[10px] uppercase tracking-widest mt-0.5"
-            style={{ color: '#6B5880', fontFamily: 'monospace' }}>
+          <p className="text-[10px] uppercase tracking-widest mt-0.5 font-semibold"
+            style={{ color: '#6B5880', letterSpacing: '0.12em' }}>
             Admin Portal
           </p>
         </div>
@@ -144,7 +144,7 @@ export default function Sidebar({ activeTab, setActiveTab, isCollapsed, setIsCol
           {!isCollapsed && (
             <div className="overflow-hidden flex-1 min-w-0">
               <p className="text-xs font-semibold truncate text-white">{displayName}</p>
-              <p className="text-[10px] truncate" style={{ color: '#6B5880', fontFamily: 'monospace' }}>
+              <p className="text-[10px] truncate" style={{ color: '#6B5880' }}>
                 {user?.email}
               </p>
             </div>
